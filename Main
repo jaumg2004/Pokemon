@@ -1,0 +1,202 @@
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String nome, pokebola;
+        int número;
+        int menu;
+        int optipo;
+        String pokebolaPokemon;
+
+        Pokedex pokedex = new Pokedex();
+
+        System.out.println("Eu sou o Rotomdex, uma Pokedex possuída por um Rotom!!");
+        System.out.println("Estou aqui para cumprir as ordens do meu treinador.");
+        System.out.println("Escolha uma das opções abaixo para iniciar:");
+        System.out.println("1 - Registrar Pokemon capturado");
+        System.out.println("2 - Verificar se Pokemon foi capturado");
+        System.out.println("3 - Listar Pokemons por tipo em ordem alfabética");
+        System.out.println("4 - Contar quantos Pokemons de um tipo específico existem");
+        System.out.println("5 - Abandonar Pokemons pela sua pokebola");
+        System.out.println("6 - Mostrar Pokemons pela sua pokebola");
+        System.out.println("7 - Descobrir por qual percurso (emOrdem, pósOrdem e préOrdem)\n" +
+                "    encontra primeiro o número do pokémon procurado.");
+        System.out.println("8 - Desligar");
+
+
+        menu = scanner.nextInt();
+        scanner.nextLine(); // Limpar a quebra de linha
+
+        while (menu != 8) {
+            switch (menu) {
+                case 1:
+                    System.out.print("Digite o nome do Pokemon: ");
+                    nome = scanner.nextLine();
+                    System.out.print("A pokebola utilizada para capturar (pokeball, greatball, ultraball ou masterball): ");
+                    pokebola = scanner.nextLine();
+                    while (!pokebola.equals("pokeball") && !pokebola.equals("greatball") && !pokebola.equals("ultraball") && !pokebola.equals("masterball")) {
+                        System.out.println("Pokebola não catalogada!!");
+                        System.out.print("Digite novamente: ");
+                        pokebola = scanner.nextLine();
+                    }
+                    System.out.print("O número do Pokemon: ");
+                    número = scanner.nextInt();
+                    System.out.print("O tipo do Pokemon:\n" +
+                            "(Obs.:se o Pokemon for de mais de um tipo\n" +
+                            "escolha apenas o tipo principal dele)\n" + "1 - Normal, " + "2 - Fogo, " +
+                            "3 - Água\n" + "4 - Planta, " + "5 - Voador, " + "6 - Lutador\n" +
+                            "7 - Venenoso, " + "8 - Elétrico, " + "9 - Terra\n" + "10 - Rocha, " + "11 - Psíquico, " +
+                            "12 - Gelo\n" + "13 - Inseto, " +
+                            "14 - Fantasma, " + "15 - Ferro\n" +
+                            "16 - Dragão, " + "17 - Sombrio, " + "18 - Fada\n");
+                    scanner.nextLine();//Limpar quebra de linha
+                    optipo = scanner.nextInt();
+                    scanner.nextLine();//Limpar quebra de linha
+
+                    switch (optipo) {
+                        case 1:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Normal"));
+                            break;
+                        case 2:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Fogo"));
+                            break;
+                        case 3:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Água"));
+                            break;
+                        case 4:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Planta"));
+                            break;
+                        case 5:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Voador"));
+                            break;
+                        case 6:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Lutador"));
+                            break;
+                        case 7:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Venenoso"));
+                            break;
+                        case 8:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Elétrico"));
+                            break;
+                        case 9:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Terra"));
+                            break;
+                        case 10:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Rocha"));
+                            break;
+                        case 11:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Psíquico"));
+                            break;
+                        case 12:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Gelo"));
+                            break;
+                        case 13:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Inseto"));
+                            break;
+                        case 14:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Fantasma"));
+                            break;
+                        case 15:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Ferro"));
+                            break;
+                        case 16:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Dragão"));
+                            break;
+                        case 17:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Sombrio"));
+                            break;
+                        case 18:
+                            pokedex.capturar(new Pokemon(nome, pokebola, número, "Fada"));
+                            break;
+                    }
+
+                    System.out.println("Pokemon capturado com sucesso!");
+                    System.out.println();
+
+                    break;
+
+                case 2:
+                    System.out.print("Digite o nome do Pokémon a ser verificado: ");
+                    String nomePokemon = scanner.nextLine();
+
+                    if (pokedex.pokemonExiste(nomePokemon)) {
+                        System.out.println("Pokemon encontrado!");
+                    } else {
+                        System.out.println("Pokemon não encontrado!");
+                    }
+                    System.out.println();
+
+                    break;
+
+                case 3:
+                    System.out.println("Pokémons por tipo em ordem alfabética:");
+                    pokedex.listarPorTipoAlfabeticamente();
+
+                    break;
+
+                case 4:
+                    System.out.print("Digite o tipo de Pokémon a ser contado: ");
+                    String tipoPokemon = scanner.nextLine();
+                    int count = pokedex.contarPokemonsPorTipo(tipoPokemon);
+                    System.out.println("Número de Pokémons do tipo " + tipoPokemon + ": " + count);
+                    System.out.println();
+
+                    break;
+
+                case 5:
+                    System.out.print("Digite a pokebola do(s) Pokémon(s) a ser(em) removido(s): ");
+                    pokebolaPokemon = scanner.nextLine();
+                    while (!pokebolaPokemon.equals("pokeball") && !pokebolaPokemon.equals("greatball") && !pokebolaPokemon.equals("ultraball") && !pokebolaPokemon.equals("masterball")) {
+                        System.out.println("Pokebola não catalogada!!");
+                        System.out.print("Digite novamente: ");
+                        pokebolaPokemon = scanner.nextLine();
+                    }
+                    pokedex.removerPorPokebola(pokebolaPokemon);
+                    System.out.println("Pokémon(s) com a pokebola " + pokebolaPokemon + " foi(foram) removido(s).");
+                    System.out.println();
+
+                    break;
+
+                case 6:
+                    System.out.print("Digite a pokebola do(s) Pokémon(s) a ser(em) procurado(s): ");
+                    pokebolaPokemon = scanner.nextLine();
+                    while (!pokebolaPokemon.equals("pokeball") && !pokebolaPokemon.equals("greatball") && !pokebolaPokemon.equals("ultraball") && !pokebolaPokemon.equals("masterball")) {
+                        System.out.println("Pokebola não catalogada!!");
+                        System.out.print("Digite novamente: ");
+                        pokebolaPokemon = scanner.nextLine();
+                    }
+                    pokedex.mostrarPorPokebola(pokebolaPokemon);
+
+                    break;
+
+                case 7:
+                    System.out.print("Digite o número do Pokémon a ser pesquisado: ");
+                    int númeroPokemon = scanner.nextInt();
+                    scanner.nextLine(); // Limpar a quebra de linha
+                    String percursoEncontrado = pokedex.encontrarPercurso(númeroPokemon);
+                    System.out.println(percursoEncontrado);
+                    System.out.println();
+                    break;
+
+            }
+
+            System.out.println("Escolha outra opção:");
+            System.out.println("1 - Registrar Pokemon capturado");
+            System.out.println("2 - Verificar se Pokemon foi capturado");
+            System.out.println("3 - Listar Pokemons por tipo em ordem alfabética");
+            System.out.println("4 - Contar quantos Pokemons de um tipo específico existem");
+            System.out.println("5 - Abandonar Pokemon(s) pela sua pokebola");
+            System.out.println("6 - Mostrar Pokemons pela sua pokebola");
+            System.out.println("7 - Descobrir por qual percurso (emOrdem, pósOrdem e préOrdem)\n" +
+                    "    encontra primeiro o número do pokémon procurado.");
+            System.out.println("8 - Desligar");
+
+            menu = scanner.nextInt();
+            scanner.nextLine(); // Limpar a quebra de linha
+        }
+
+        System.out.println("Desligando o Rotomdex. Até a próxima!");
+    }
+}
