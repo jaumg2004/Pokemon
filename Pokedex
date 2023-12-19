@@ -1,0 +1,252 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+public class Pokedex {
+    class Nó {
+        Pokemon pokemon;
+        Nó esq;
+        Nó dir;
+
+        public Nó(Pokemon pokemon) {
+            this.pokemon = pokemon;
+            esq = null;
+            dir = null;
+        }
+    }
+
+    Nó raiz;
+
+    public Pokedex() {
+        raiz = null;
+    }
+
+    public void capturar(Pokemon pokemon) {
+        raiz = capturarRec(raiz, pokemon);
+    }
+
+    private Nó capturarRec(Nó raiz, Pokemon pokemon) {
+        if (raiz == null) {
+            raiz = new Nó(pokemon);
+            return raiz;
+        }
+        if (pokemon.nome.compareTo(raiz.pokemon.nome) < 0) {
+            raiz.esq = capturarRec(raiz.esq, pokemon);
+        } else if (pokemon.nome.compareTo(raiz.pokemon.nome) > 0) {
+            raiz.dir = capturarRec(raiz.dir, pokemon);
+        }
+        return raiz;
+    }
+
+    public void inOrder() {
+        inOrderRec(raiz);
+    }
+
+    private void inOrderRec(Nó raiz) {
+        if (raiz != null) {
+            inOrderRec(raiz.esq);
+            System.out.println("Nome: " + raiz.pokemon.nome);
+            System.out.println("Tipo: " + raiz.pokemon.tipo);
+            System.out.println("Número: " + raiz.pokemon.número);
+            System.out.println("Pokebola: " + raiz.pokemon.pokebola);
+            System.out.println();
+            inOrderRec(raiz.dir);
+        }
+    }
+
+    public boolean pokemonExiste(String nome) {
+        return buscar(raiz, nome);
+    }
+
+    private boolean buscar(Nó raiz, String nome) {
+        if (raiz == null) {
+            return false;
+        }
+        int comparação = nome.compareTo(raiz.pokemon.nome);
+        if (comparação == 0) {
+            return true; // Pokémon encontrado
+        } else if (comparação < 0) {
+            return buscar(raiz.esq, nome);
+        } else {
+            return buscar(raiz.dir, nome);
+        }
+    }
+
+    public void listarPorTipoAlfabeticamente() {
+        ArrayList<Pokemon> listaPorTipo = new ArrayList<>();
+        listarPorTipoRec(raiz, listaPorTipo);
+        Collections.sort(listaPorTipo, Comparator.comparing(pokemon -> pokemon.tipo));
+
+        for (Pokemon pokemon : listaPorTipo) {
+            System.out.println("Nome: " + pokemon.nome);
+            System.out.println("Tipo: " + pokemon.tipo);
+            System.out.println("Número: " + pokemon.número);
+            System.out.println("Pokebola: " + pokemon.pokebola);
+            System.out.println();
+        }
+    }
+
+    private void listarPorTipoRec(Nó raiz, ArrayList<Pokemon> listaPorTipo) {
+        if (raiz != null) {
+            listarPorTipoRec(raiz.esq, listaPorTipo);
+            listaPorTipo.add(raiz.pokemon);
+            listarPorTipoRec(raiz.dir, listaPorTipo);
+        }
+    }
+
+    public int contarPokemonsPorTipo(String tipo) {
+        return contarPokemonsPorTipoRec(raiz, tipo);
+    }
+
+    private int contarPokemonsPorTipoRec(Nó raiz, String tipo) {
+        if (raiz == null) {
+            return 0;
+        }
+        int comparação = tipo.compareTo(raiz.pokemon.tipo);
+        int contagem = 0;
+        if (comparação == 0) {
+            contagem = 1; // Encontrou um Pokémon do tipo especificado
+        }
+        return contagem + contarPokemonsPorTipoRec(raiz.esq, tipo) + contarPokemonsPorTipoRec(raiz.dir, tipo);
+    }
+
+    public void removerPorPokebola(String pokebola) {
+        raiz = removerPorPokebolaRec(raiz, pokebola);
+    }
+
+    private Nó removerPorPokebolaRec(Nó raiz, String pokebola) {
+        if (raiz == null) {
+            return raiz;
+        }
+        int comparação = pokebola.compareTo(raiz.pokemon.pokebola);
+        if (comparação < 0) {
+            raiz.esq = removerPorPokebolaRec(raiz.esq, pokebola);
+        } else if (comparação > 0) {
+            raiz.dir = removerPorPokebolaRec(raiz.dir, pokebola);
+        } else {
+            // Encontrou o Pokémon com a pokebola especificada
+            if (raiz.esq == null) {
+                return raiz.dir;
+            } else if (raiz.dir == null) {
+                return raiz.esq;
+            }
+            raiz.pokemon = encontrarMenor(raiz.dir);
+            raiz.dir = removerPorPokebolaRec(raiz.dir, raiz.pokemon.pokebola);
+        }
+        return raiz;
+    }
+
+    public void mostrarPorPokebola(String pokebola) {
+        raiz = mostrarPorPokebolaRec(raiz, pokebola);
+    }
+
+    private Nó mostrarPorPokebolaRec(Nó raiz, String pokebola) {
+        if (raiz == null) {
+            return raiz;
+        }
+        int comparação = pokebola.compareTo(raiz.pokemon.pokebola);
+        if (comparação < 0) {
+            raiz.esq = mostrarPorPokebolaRec(raiz.esq, pokebola);
+        } else if (comparação > 0) {
+            raiz.dir = mostrarPorPokebolaRec(raiz.dir, pokebola);
+        } else {
+            // Encontrou o Pokémon com a pokebola especificada
+            System.out.println("Nome: " + raiz.pokemon.nome);
+            System.out.println("Tipo: " + raiz.pokemon.tipo);
+            System.out.println("Número: " + raiz.pokemon.número);
+            System.out.println();
+        }
+        return raiz;
+    }
+
+    private Pokemon encontrarMenor(Nó raiz) {
+        Pokemon menor = raiz.pokemon;
+        while (raiz.esq != null) {
+            menor = raiz.esq.pokemon;
+            raiz = raiz.esq;
+        }
+        return menor;
+    }
+
+    public String encontrarPercurso(int número) {
+        return encontrarPercursoRec(raiz, número);
+    }
+
+    private String encontrarPercursoRec(Nó raiz, int número) {
+        if (raiz == null) {
+            return "Pokemon não encontrado";
+        }
+
+        if (número == raiz.pokemon.número) {
+            return "Pokemon encontrado primeiro: emOrdem";
+        } else if (número < raiz.pokemon.número) {
+            String percursoEsquerda = encontrarPercursoRec(raiz.esq, número);
+            if (!percursoEsquerda.equals("Pokemon não encontrado")) {
+                return "Pokemon encontrado primeiro: emOrdem - Esquerda";
+            }
+        } else {
+            String percursoDireita = encontrarPercursoRec(raiz.dir, número);
+            if (!percursoDireita.equals("Pokemon não encontrado")) {
+                return "Pokemon encontrado primeiro: emOrdem - Direita";
+            }
+        }
+
+        String percursoPreOrdem = encontrarPercursoPreOrdem(raiz, número);
+        if (!percursoPreOrdem.equals("Pokemon não encontrado")) {
+            return percursoPreOrdem;
+        }
+
+        String percursoPosOrdem = encontrarPercursoPosOrdem(raiz, número);
+        if (!percursoPosOrdem.equals("Pokemon não encontrado")) {
+            return percursoPosOrdem;
+        }
+
+        return "Pokemon não encontrado";
+    }
+
+    private String encontrarPercursoPreOrdem(Nó raiz, int número) {
+        if (raiz == null) {
+            return "Pokemon não encontrado";
+        }
+
+        if (número == raiz.pokemon.número) {
+            return "Pokemon encontrado primeiro: préOrdem";
+        }
+
+        String percursoEsquerda = encontrarPercursoPreOrdem(raiz.esq, número);
+        if (!percursoEsquerda.equals("Pokemon não encontrado")) {
+            return "Pokemon encontrado primeiro: préOrdem - Esquerda";
+        }
+
+        String percursoDireita = encontrarPercursoPreOrdem(raiz.dir, número);
+        if (!percursoDireita.equals("Pokemon não encontrado")) {
+            return "Pokemon encontrado primeiro: préOrdem - Direita";
+        }
+
+        return "Pokemon não encontrado";
+    }
+
+    private String encontrarPercursoPosOrdem(Nó raiz, int número) {
+        if (raiz == null) {
+            return "Pokemon não encontrado";
+        }
+
+        String percursoEsquerda = encontrarPercursoPosOrdem(raiz.esq, número);
+        if (!percursoEsquerda.equals("Pokemon não encontrado")) {
+            return "Pokemon encontrado primeiro: posOrdem - Esquerda";
+        }
+
+        String percursoDireita = encontrarPercursoPosOrdem(raiz.dir, número);
+        if (!percursoDireita.equals("Pokemon não encontrado")) {
+            return "Pokemon encontrado primeiro: posOrdem - Direita";
+        }
+
+        if (número == raiz.pokemon.número) {
+            return "Pokemon encontrado primeiro: posOrdem";
+        }
+
+        return "Pokemon não encontrado";
+    }
+
+
+}
