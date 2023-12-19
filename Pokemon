@@ -1,0 +1,13 @@
+public class Pokemon {
+    String nome;
+    String pokebola;
+    int número;
+    String tipo;
+
+    public Pokemon(String nome, String pokebola, int número, String tipo) {
+        this.nome = nome;
+        this.pokebola = pokebola;
+        this.número = número;
+        this.tipo = tipo;
+    }
+}
